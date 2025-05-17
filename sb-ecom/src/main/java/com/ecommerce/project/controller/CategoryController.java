@@ -1,6 +1,8 @@
 package com.ecommerce.project.controller;
 
 import com.ecommerce.project.model.Category;
+import com.ecommerce.project.service.CategoryService;
+import com.ecommerce.project.service.CategoryServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,16 +13,21 @@ import java.util.List;
 
 @RestController
 public class CategoryController {
-    private List<Category> categories = new ArrayList<>();
+    private final CategoryService categoryService;
+
+    // Only one impl of CategoryService Interface, so this will work. NOTE CategoryServiceImpl is Bean
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/api/public/categories")
-    public List<Category> gelAllCategories(){
-        return categories;
+    public List<Category> getAllCategories(){
+        return categoryService.getAllCategories();
     }
 
     @PostMapping("/api/public/categories")
     public String createCategory(@RequestBody Category category){
-        categories.add(category);
+        categoryService.createCategory(category);
         return "Category added successfully";
     }
 }
